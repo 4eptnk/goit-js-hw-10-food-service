@@ -2,6 +2,10 @@ import './styles.css';
 import menuData from './data/menu.json';
 import menuTemplate from './templates/menu-item.hbs';
 
+const bodyLink = document.querySelector('body');
+const menuLink = document.querySelector('.js-menu');
+const switchEl = document.querySelector('#theme-switch-toggle');
+
 const Theme = {
   LIGHT: 'light-theme',
   DARK: 'dark-theme',
@@ -9,11 +13,14 @@ const Theme = {
 
 const setTheme = theme => {
   currentTheme = theme;
-  bodyRef.classList.remove(Theme.LIGHT, Theme.DARK);
-  bodyRef.classList.add(theme);
+  bodyLink.classList.remove(Theme.LIGHT, Theme.DARK);
+  bodyLink.classList.add(theme);
   localStorage.setItem('theme', theme);
-  themeCheckboxRef.checked = theme !== Theme.LIGHT;
+  switchEl.checked = theme !== Theme.LIGHT;
 };
+
+let currentTheme = localStorage.getItem('theme') || Theme.LIGHT;
+setTheme(currentTheme);
 
 const getOppositeTheme = () => {
   return currentTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
@@ -23,13 +30,6 @@ const onThemeCheckBoxChanged = () => {
   setTheme(getOppositeTheme());
 };
 
-const bodyRef = document.body;
-const menuRef = document.querySelector('.js-menu');
-const themeCheckboxRef = document.querySelector('#theme-switch-toggle');
+menuLink.innerHTML = menuTemplate(menuData);
 
-let currentTheme = localStorage.getItem('theme') || Theme.LIGHT;
-setTheme(currentTheme);
-
-menuRef.innerHTML = menuTemplate(menuData);
-
-themeCheckboxRef.addEventListener('change', onThemeCheckBoxChanged);
+switchEl.addEventListener('change', onThemeCheckBoxChanged);
